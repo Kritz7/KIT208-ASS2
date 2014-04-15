@@ -44,6 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Elevator.cs" />
      <Compile Include="Assets\Teleport.cs" />
      <None Include="Assets\Shaders\Toon.shader" />
      <None Include="Assets\Shaders\Physical.shader" />

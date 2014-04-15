@@ -2,16 +2,31 @@
 using System.Collections;
 
 public class Teleport : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
 	
+	public bool PanelEnabled = true;
+	
+	Elevator attachedElevator;
+	bool teleportActivated = false;
+	
+	// Use this for initialization
+	void Start ()
+	{
+		attachedElevator = transform.root.GetComponent<Elevator>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(Input.GetKeyDown(KeyCode.Mouse0))
+		if(teleportActivated)
+		{
+			if(attachedElevator.elevatorComplete)
+			{
+				MovePlayerToElevator();	
+				teleportActivated = false;
+			}
+		}
+		
+		if(PanelEnabled && Input.GetKeyDown(KeyCode.Mouse0))
 		{
 			RaycastHit hit;
 			
@@ -19,13 +34,23 @@ public class Teleport : MonoBehaviour {
 			{
 				if(hit.transform == this.transform)
 				{
-					GameObject player = GameObject.Find("First Person Controller");
-					
-					Vector3 posDiff = player.transform.position - transform.position;
-					
-					player.transform.position = GameObject.Find("!teleport1").transform.position + posDiff;
+					teleportActivated = true;
+					PanelEnabled = false;
+					attachedElevator.TurnOn();
 				}				
 			}
 		}
+	}
+	
+	void MovePlayerToElevator()
+	{
+		GameObject player = GameObject.Find("First Person Controller");
+		Teleport teleportPanel =  GameObject.Find("!teleport1").GetComponent<Teleport>();
+		
+		Vector3 posDiff = player.transform.position - transform.position;
+		
+		player.transform.position = teleportPanel.transform.position + posDiff;	
+		
+		teleportPanel.attachedElevator.TurnOn();
 	}
 }
